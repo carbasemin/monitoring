@@ -1,0 +1,47 @@
+version: '3.2'
+services:
+  prometheus:
+    image: prom/prometheus:v2.28.0
+    restart: always
+    container_name: prometheus
+    volumes:
+     - ./prometheus:/etc/prometheus
+     - prometheus-storage:/prometheus/data
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=30d
+      # To reload the config file: curl -X POST http://localhost:9090/prometheus/-/reload
+      - --web.enable-lifecycle
+      - --web.external-url=http://localhost:9090/prometheus/
+    ports:
+      - 127.0.0.1:9090:9090
+ 
+  alertmanager:
+    image: prom/alertmanager:v0.22.2
+    restart: always
+    container_name: alertmanager
+    volumes:
+      - ./alertmanager:/etc/alertmanager/config
+    command:
+      # To reload the config file: curl -X POST http://localhost:9093/alertmanager/-/reload
+      - --config.file=/etc/alertmanager/config/alertmanager.yml
+      - --web.external-url=http://localhost:9093/alertmanager/
+    ports:
+      - 127.0.0.1:9093:9093
+
+  alertmanager-discord:
+    image: benjojo/alertmanager-discord
+    restart: always
+    container_name: alertmanager-discord
+    env_file:
+      -  .env
+
+volumes:
+  prometheus-storage:
+
+# so that grafana and prometheus can talk.
+networks:
+  default:
+    external:
+      name: logs_default
+

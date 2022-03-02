@@ -1,0 +1,63 @@
+global:
+  # how often should metrics be pulled from sources below.
+  scrape_interval: 5s
+  # how often the expressions defined in alert.yml should be evaluated.
+  evaluation_interval: 5s
+
+# where to send alerts to?
+alerting:
+  alertmanagers:
+  - path_prefix: /alertmanager
+    static_configs:
+    - targets:
+      - alertmanager:9093
+
+
+# alerting rules.
+rule_files:
+  - 'alert.yml'
+  - 'record.yml'
+
+scrape_configs:
+# Monitor prod.
+- job_name: prod-node
+  scheme: http
+  metrics_path: /node-exporter
+  basic_auth:
+    username: prom
+    password: <password>
+  static_configs:
+  - targets:
+    - monitor-prod.<server_name>.com
+
+- job_name: prod-cadvisor
+  scheme: http
+  metrics_path: /cadvisor
+  basic_auth:
+    username: prom 
+    password: <password>
+  static_configs:
+  - targets:
+    - monitor-prod.<server_name>.com
+
+# Monitor dev.
+- job_name: dev-node
+  scheme: http
+  metrics_path: /node-exporter
+  basic_auth:
+    username: prom
+    password: <password>
+  static_configs:
+  - targets:
+    - monitor-dev.<server_name>.com
+
+- job_name: dev-cadvisor
+  scheme: http
+  metrics_path: /cadvisor
+  basic_auth:
+    username: prom 
+    password: <password>
+  static_configs:
+  - targets:
+    - monitor-dev.<server_name>.com
+

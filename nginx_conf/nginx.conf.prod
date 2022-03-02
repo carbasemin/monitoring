@@ -1,0 +1,19 @@
+server {
+    listen 80;
+    server_name monitor-prod.<server_name>.com;
+
+    location /cadvisor/metrics {
+        proxy_pass http://cadvisor:8080/metrics;
+
+        auth_basic "Restricted Content";
+        auth_basic_user_file /etc/nginx/.htpasswd;
+    }
+
+    location /node-exporter/metrics {
+        proxy_pass http://node-exporter:9100/metrics;
+
+        auth_basic "Restricted Content";
+        auth_basic_user_file /etc/nginx/.htpasswd;
+    }
+}
+

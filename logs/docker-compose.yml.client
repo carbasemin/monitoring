@@ -1,0 +1,17 @@
+version: '3'
+services:
+  fluentd:
+    build: ./fluentd
+    container_name: fluentd
+    user: root
+    restart: always
+    volumes:
+      - ./fluentd/client_conf:/fluentd/etc
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers:/fluentd/log/containers:ro
+      - ./fluentd/container-logs.pos:/container-logs.pos
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - monitoring_env=$MONITORING_ENV
+

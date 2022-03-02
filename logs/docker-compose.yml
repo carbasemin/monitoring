@@ -1,0 +1,41 @@
+version: '3'
+services:
+  fluentd:
+    build: ./fluentd
+    container_name: fluentd
+    volumes:
+      - ./fluentd/conf:/fluentd/etc
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/containers:/fluentd/log/containers:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      # random HTTP port.
+      - 127.0.0.1:9351:9351
+
+  loki:
+    image: grafana/loki:2.4.1
+    container_name: loki
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - ./loki/local-config.yaml:/etc/loki/local-config.yaml
+      - loki-data:/loki
+      - ./loki/rules:/loki/rules
+
+  grafana:
+    image: grafana/grafana:8.0.4
+    restart: always
+    container_name: grafana
+    ports:
+      - 127.0.0.1:3000:3000
+    volumes:
+      - grafana-storage:/var/lib/grafana
+        # - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+
+volumes:
+  grafana-storage:
+  loki-data:

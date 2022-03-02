@@ -1,0 +1,42 @@
+groups
+
+- name: dev-server
+  rules:
+    - alert: Dev_HighMemoryUsage
+      expr: node_memory_MemAvailable_bytes{job="dev-node"} / node_memory_MemTotal_bytes{job="dev-node"} < 0.10
+      for: 15s
+      annotations:
+        description: "RAM usage >90% for the last 15 seconds."
+
+    - alert: Dev_HighCPUUsage
+      expr: container_cpu_usage_percent{id="/", job="dev-cadvisor"} > 90
+      for: 5m
+      annotations:
+        description: "CPU usage >90% for the last 5 minutes."
+
+    - alert: Dev_HighDiskUsage
+      expr: host_disk_usage{job="dev-node"} / host_disk_total{job="dev-node"} > 0.90
+      for: 5s
+      annotations:
+        description: "Disk usage >90%"
+
+- name: prod-server
+  rules:
+    - alert: Prod_HighMemoryUsage
+      expr: node_memory_MemAvailable_bytes{job="prod-node"} / node_memory_MemTotal_bytes{job="prod-node"} < 0.10
+      for: 15s
+      annotations:
+        description: "RAM usage >90% for the last 15 seconds."
+    
+    - alert: Prod_HighCPUUsage
+      expr: host_cpu_total_usage_percent{job="prod-node"} > 90
+      for: 5m
+      annotations:
+        description: "CPU usage >90% for the last 5 minutes."
+
+    - alert: Prod_HighDiskUsage
+      expr: host_disk_usage{job="prod-node"} / host_disk_total{job="prod-node"} > 0.90
+      for: 5s
+      annotations:
+        description: "Disk usage >90%"
+

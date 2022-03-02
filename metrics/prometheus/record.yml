@@ -1,0 +1,23 @@
+groups:
+  - name: node_rules
+    rules:
+    - record: host_cpu_usage_percent
+      expr: avg without(cpu) (irate(node_cpu_seconds_total{mode!="idle"}[15s])) * 100
+
+    - record: host_cpu_total_usage_percent
+      expr: sum without (mode) (avg without(cpu) (irate(node_cpu_seconds_total{mode!="idle"}[15s])) * 100)
+
+    - record: host_disk_usage
+      expr: avg without(mountpoint) (node_filesystem_size_bytes - node_filesystem_free_bytes)
+
+    - record: host_disk_total
+      expr: avg without(mountpoint) (node_filesystem_size_bytes)
+
+  - name: cadvisor_rules
+    rules:
+    - record: container_cpu_usage_percent
+      expr: (avg without(cpu) (irate(container_cpu_usage_seconds_total[15s]))) * 100
+
+    - record: container_working_set_MB
+      expr: container_memory_working_set_bytes / 1000000
+
