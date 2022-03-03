@@ -4,7 +4,7 @@ Collecting logs and metrics for hypothetical DEV and PROD servers. Opening up a 
 
 ## Logs
 
-![logs.jpg][static/logs.jpg]
+![logs.jpg](static/logs.jpg)
 
 ## Metrics
 
