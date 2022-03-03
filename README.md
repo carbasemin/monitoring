@@ -8,6 +8,7 @@ Collecting logs and metrics for hypothetical DEV and PROD servers. Opening up a 
 
 ## Metrics
 
+![metrics.jpg](static/metrics_.jpg)
 
 ## TO-DO
 
