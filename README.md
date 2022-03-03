@@ -10,3 +10,8 @@ Collecting logs and metrics for hypothetical DEV and PROD servers. Opening up a 
 
 ![metrics.jpg](static/metrics.jpg)
 
+## TO-DO
+
+- Better documentation.
+- Service discovery.
+
